@@ -1,20 +1,29 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Art-2-Rue{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<h1 class="mb-1">Art-2-Rue</h1>
+<p class="text-muted mb-4">Archivage du patrimoine éphémère du Street Art</p>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/home/ysaadna/Code/Controle_Symfony_Yad/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>/home/ysaadna/Code/Controle_Symfony_Yad/templates/home/index.html.twig</code></li>
-    </ul>
+<div class="row g-3">
+    {% set sections = [
+        {'label': 'Œuvres', 'route': 'app_oeuvre_index', 'desc': 'Les œuvres archivées'},
+        {'label': 'Artistes', 'route': 'app_artiste_index', 'desc': 'Les artistes et leur bio'},
+        {'label': 'Lieux', 'route': 'app_lieu_index', 'desc': 'Où se trouvent les œuvres'},
+        {'label': 'Techniques', 'route': 'app_technique_index', 'desc': 'Pochoir, collage, mosaïque…'},
+        {'label': 'Bénévoles', 'route': 'app_benevole_index', 'desc': 'Les photographes'},
+        {'label': 'Photos', 'route': 'app_photo_index', 'desc': 'Suivi de l\'évolution des œuvres'}
+    ] %}
+    {% for s in sections %}
+        <div class="col-md-4">
+            <a href="{{ path(s.route) }}" class="card h-100 text-decoration-none">
+                <div class="card-body">
+                    <h5 class="card-title">{{ s.label }}</h5>
+                    <p class="card-text text-muted mb-0">{{ s.desc }}</p>
+                </div>
+            </a>
+        </div>
+    {% endfor %}
 </div>
 {% endblock %}

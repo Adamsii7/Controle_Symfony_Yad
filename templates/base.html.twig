@@ -20,6 +20,18 @@
         {% endif %}
     </head>
     <body class="container py-4">
+    <nav class="d-flex gap-3 mb-4">
+    <a href="{{ path('app_home') }}">Accueil</a>
+    <a href="{{ path('app_oeuvre_index') }}">Œuvres</a>
+    <a href="{{ path('app_artiste_index') }}">Artistes</a>
+    <a href="{{ path('app_lieu_index') }}">Lieux</a>
+    <a href="{{ path('app_technique_index') }}">Techniques</a>
+    <a href="{{ path('app_benevole_index') }}">Bénévoles</a>
+    <a href="{{ path('app_photo_index') }}">Photos</a>
+    {% if app.user %}
+        <a href="{{ path('app_logout') }}">Déconnexion ({{ app.user.userIdentifier }})</a>
+    {% endif %}
+</nav>
         {% block body %}{% endblock %}
     </body>
 </html>
