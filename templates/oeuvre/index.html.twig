@@ -5,7 +5,7 @@
 {% block body %}
     <h1>Oeuvre index</h1>
 
-    <table class="table">
+    <table class="table table-striped align-middle">
         <thead>
             <tr>
                 <th>Id</th>
@@ -25,8 +25,9 @@
                 <td>{{ oeuvre.description }}</td>
                 <td>{{ oeuvre.estDetruite ? 'Yes' : 'No' }}</td>
                 <td>
-                    <a href="{{ path('app_oeuvre_show', {'id': oeuvre.id}) }}">show</a>
-                    <a href="{{ path('app_oeuvre_edit', {'id': oeuvre.id}) }}">edit</a>
+                    <a class="btn btn-sm btn-info" href="{{ path('app_oeuvre_show', {'id': oeuvre.id}) }}">Voir</a>
+                    <a class="btn btn-sm btn-warning" href="{{ path('app_oeuvre_edit', {'id': oeuvre.id}) }}">Modifier</a>
+                    {{ include('oeuvre/_delete_form.html.twig') }}
                 </td>
             </tr>
         {% else %}
@@ -37,5 +38,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_oeuvre_new') }}">Create new</a>
+    <a class="btn btn-primary" href="{{ path('app_oeuvre_new') }}">Ajouter</a>
 {% endblock %}

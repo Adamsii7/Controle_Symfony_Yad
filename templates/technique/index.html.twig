@@ -5,7 +5,7 @@
 {% block body %}
     <h1>Technique index</h1>
 
-    <table class="table">
+    <table class="table table-striped align-middle">
         <thead>
             <tr>
                 <th>Id</th>
@@ -19,8 +19,9 @@
                 <td>{{ technique.id }}</td>
                 <td>{{ technique.nom }}</td>
                 <td>
-                    <a href="{{ path('app_technique_show', {'id': technique.id}) }}">show</a>
-                    <a href="{{ path('app_technique_edit', {'id': technique.id}) }}">edit</a>
+                    <a class="btn btn-sm btn-info" href="{{ path('app_technique_show', {'id': technique.id}) }}">Voir</a>
+                    <a class="btn btn-sm btn-warning" href="{{ path('app_technique_edit', {'id': technique.id}) }}">Modifier</a>
+                    {{ include('technique/_delete_form.html.twig') }}
                 </td>
             </tr>
         {% else %}
@@ -31,5 +32,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_technique_new') }}">Create new</a>
+    <a class="btn btn-primary" href="{{ path('app_technique_new') }}">Ajouter</a>
 {% endblock %}
