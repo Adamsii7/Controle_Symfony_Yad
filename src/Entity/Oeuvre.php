@@ -44,10 +44,10 @@ class Oeuvre
     #[ORM\ManyToMany(targetEntity: Technique::class, inversedBy: 'oeuvres')]
     private Collection $techniques;
 
-    #[ORM\OneToOne(targetEntity: self::class, inversedBy: 'oeuvreRecouvrante', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: self::class, inversedBy: 'oeuvreRecouvrante')]
     private ?self $oeuvreRecouverte = null;
 
-    #[ORM\OneToOne(targetEntity: self::class, mappedBy: 'oeuvreRecouverte', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: self::class, mappedBy: 'oeuvreRecouverte')]
     private ?self $oeuvreRecouvrante = null;
 
     /**
