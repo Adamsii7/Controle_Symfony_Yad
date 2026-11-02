@@ -50,10 +50,17 @@ class Oeuvre
     #[ORM\OneToOne(targetEntity: self::class, mappedBy: 'oeuvreRecouverte', cascade: ['persist', 'remove'])]
     private ?self $oeuvreRecouvrante = null;
 
+    /**
+     * @var Collection<int, Photo>
+     */
+    #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'oeuvre')]
+    private Collection $photos;
+
     public function __construct()
     {
         $this->artistes = new ArrayCollection();
         $this->techniques = new ArrayCollection();
+        $this->photos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -199,6 +206,36 @@ class Oeuvre
         }
 
         $this->oeuvreRecouvrante = $oeuvreRecouvrante;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Photo>
+     */
+    public function getPhotos(): Collection
+    {
+        return $this->photos;
+    }
+
+    public function addPhoto(Photo $photo): static
+    {
+        if (!$this->photos->contains($photo)) {
+            $this->photos->add($photo);
+            $photo->setOeuvre($this);
+        }
+
+        return $this;
+    }
+
+    public function removePhoto(Photo $photo): static
+    {
+        if ($this->photos->removeElement($photo)) {
+            // set the owning side to null (unless already changed)
+            if ($photo->getOeuvre() === $this) {
+                $photo->setOeuvre(null);
+            }
+        }
 
         return $this;
     }
