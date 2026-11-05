@@ -7,9 +7,11 @@ use App\Form\PhotoType;
 use App\Repository\PhotoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/photo')]
 final class PhotoController extends AbstractController
@@ -23,13 +25,14 @@ final class PhotoController extends AbstractController
     }
 
     #[Route('/new', name: 'app_photo_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $photo = new Photo();
         $form = $this->createForm(PhotoType::class, $photo);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->enregistrerFichier($form, $photo, $slugger);
             $entityManager->persist($photo);
             $entityManager->flush();
 
@@ -51,12 +54,13 @@ final class PhotoController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_photo_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Photo $photo, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Photo $photo, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(PhotoType::class, $photo);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->enregistrerFichier($form, $photo, $slugger);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_photo_index', [], Response::HTTP_SEE_OTHER);
@@ -77,5 +81,16 @@ final class PhotoController extends AbstractController
         }
 
         return $this->redirectToRoute('app_photo_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    private function enregistrerFichier(FormInterface $form, Photo $photo, SluggerInterface $slugger): void
+    {
+        $fichier = $form->get('fichier')->getData();
+        if ($fichier) {
+            $nom = $slugger->slug(pathinfo($fichier->getClientOriginalName(), PATHINFO_FILENAME))
+                . '-' . uniqid() . '.' . $fichier->guessExtension();
+            $fichier->move($this->getParameter('kernel.project_dir') . '/public/uploads/photos', $nom);
+            $photo->setNomFichier($nom);
+        }
     }
 }
