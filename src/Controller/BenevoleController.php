@@ -72,8 +72,12 @@ final class BenevoleController extends AbstractController
     public function delete(Request $request, Benevole $benevole, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$benevole->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($benevole);
-            $entityManager->flush();
+            if (!$benevole->getPhotos()->isEmpty()) {
+                $this->addFlash('danger', 'Impossible de supprimer ce bénévole : des photos lui sont associées.');
+            } else {
+                $entityManager->remove($benevole);
+                $entityManager->flush();
+            }
         }
 
         return $this->redirectToRoute('app_benevole_index', [], Response::HTTP_SEE_OTHER);

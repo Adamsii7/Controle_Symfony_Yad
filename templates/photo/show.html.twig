@@ -17,7 +17,7 @@
             </tr>
             <tr>
                 <th>NomFichier</th>
-                <td>{{ photo.nomFichier }}</td>
+                <td><img src="{{ asset('uploads/photos/' ~ photo.nomFichier) }}" alt="" class="img-fluid" style="max-height: 400px"></td>
             </tr>
             <tr>
                 <th>EtatOeuvre</th>

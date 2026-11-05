@@ -72,8 +72,14 @@ final class OeuvreController extends AbstractController
     public function delete(Request $request, Oeuvre $oeuvre, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$oeuvre->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($oeuvre);
-            $entityManager->flush();
+            if (!$oeuvre->getPhotos()->isEmpty()) {
+                $this->addFlash('danger', 'Impossible de supprimer cette œuvre : des photos y sont rattachées.');
+            } elseif ($oeuvre->getOeuvreRecouvrante() !== null) {
+                $this->addFlash('danger', 'Impossible de supprimer cette œuvre : une autre œuvre la recouvre.');
+            } else {
+                $entityManager->remove($oeuvre);
+                $entityManager->flush();
+            }
         }
 
         return $this->redirectToRoute('app_oeuvre_index', [], Response::HTTP_SEE_OTHER);

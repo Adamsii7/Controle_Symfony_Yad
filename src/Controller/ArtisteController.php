@@ -72,8 +72,12 @@ final class ArtisteController extends AbstractController
     public function delete(Request $request, Artiste $artiste, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$artiste->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($artiste);
-            $entityManager->flush();
+            if (!$artiste->getOeuvres()->isEmpty()) {
+                $this->addFlash('danger', 'Impossible de supprimer cet artiste : des œuvres lui sont associées.');
+            } else {
+                $entityManager->remove($artiste);
+                $entityManager->flush();
+            }
         }
 
         return $this->redirectToRoute('app_artiste_index', [], Response::HTTP_SEE_OTHER);

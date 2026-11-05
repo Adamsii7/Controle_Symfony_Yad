@@ -32,6 +32,11 @@
         <a href="{{ path('app_logout') }}">Déconnexion ({{ app.user.userIdentifier }})</a>
     {% endif %}
 </nav>
+{% for type, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ type }}">{{ message }}</div>
+    {% endfor %}
+{% endfor %}
         {% block body %}{% endblock %}
     </body>
 </html>

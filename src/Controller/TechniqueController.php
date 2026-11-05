@@ -72,8 +72,12 @@ final class TechniqueController extends AbstractController
     public function delete(Request $request, Technique $technique, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$technique->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($technique);
-            $entityManager->flush();
+            if (!$technique->getOeuvres()->isEmpty()) {
+                $this->addFlash('danger', 'Impossible de supprimer cette technique : des œuvres utilisent cette technique.');
+            } else {
+                $entityManager->remove($technique);
+                $entityManager->flush();
+            }
         }
 
         return $this->redirectToRoute('app_technique_index', [], Response::HTTP_SEE_OTHER);

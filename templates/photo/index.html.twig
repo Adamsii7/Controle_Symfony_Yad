@@ -20,7 +20,7 @@
             <tr>
                 <td>{{ photo.id }}</td>
                 <td>{{ photo.datePriseVue ? photo.datePriseVue|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ photo.nomFichier }}</td>
+                <td><img src="{{ asset('uploads/photos/' ~ photo.nomFichier) }}" alt="" class="img-thumbnail" style="height: 80px"></td>
                 <td>{{ photo.etatOeuvre }}</td>
                 <td>
                     <a class="btn btn-sm btn-info" href="{{ path('app_photo_show', {'id': photo.id}) }}">Voir</a>
